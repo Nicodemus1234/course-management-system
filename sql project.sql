@@ -216,7 +216,7 @@ JOIN course_management.courses c ON e.course_id = c.course_id;
 SELECT * FROM student_course_summary;
 
 ----adding an index on enrollments .student_id
-CREATE INDEX idx_enrollments_student                           ---  new index 
+CREATE INDEX idx_enrollments_student                           ---  defines a new index 
 ON course_management.enrollments(student_id);                  ---Creates index on the student_id column of the enrollments table.
 
 SELECT * FROM pg_indexes WHERE tablename = 'enrollments';       ---viewing indexes on a table.
