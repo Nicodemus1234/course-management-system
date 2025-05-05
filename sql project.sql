@@ -18,7 +18,7 @@ email varchar(50)NOT NULL,
 primary key(instructor_id)
 );
 
-CREATE TABLE course_management.courses(                 -- creatimg table courses
+CREATE TABLE course_management.courses(                 --- creatimg table courses
 course_id int NOT NULL,
 course_name varchar(50) NOT NULL,
 course_description text NOT NULL,
@@ -74,8 +74,8 @@ select*from course_management.courses;
 insert into course_management.enrollments(enrollment_id,student_id,course_id,enrollment_date,my_grade) --inserting the values into the enrollment table
 VALUES                                                   ----actual values
     (301,1,201,'2025-05-04','A'),
-    (302,2,202,'2025-05-05','B'),
-    (303,2,203,'2025-06-05','A'),
+    (302,2,202,'2025-05-05','F'),
+    (303,2,203,'2025-06-05','F'),
     (304,3,204,'2025-05-04','C'),
     (305,2,205,'2025-04-09','F'),
     (306,4,205,'2025-04-20','B'),
@@ -149,7 +149,7 @@ SELECT
         ELSE NULL
     END) AS average_grade
 FROM course_management.students s
-JOIN course_management.enrollments e ON s.student_id = e.student_id   ---links student data with their enrollments.
+JOIN course_management.enrollments e ON s.student_id = e.student_id   ---connects student data with enrollments.
 GROUP BY s.student_id, s.first_name, s.last_name;                    ----ensures we get individual averages.
 
 
@@ -193,13 +193,13 @@ ORDER BY average_grade desc                                           ----Sorts 
 LIMIT 3;                                                              ---give you the three students with the highest average grades
 
 
-----students failing (grade='F') in 1 or more than 1 course
+----students failing (grade='F') in  more than 1 course
 SELECT s.student_id, s.first_name, s.last_name, COUNT(e.course_id) AS failed_courses
 FROM course_management.students s
 JOIN course_management.enrollments e ON s.student_id = e.student_id
 WHERE e.my_grade = 'F'                                                  ---Filters students who have at least one failing grade
 GROUP BY s.student_id, s.first_name, s.last_name                        ---Groups students by ID and name
-HAVING COUNT(e.course_id) >= 1;                                         ---ensures students with atleast 1 student appear.
+HAVING COUNT(e.course_id) > 1;                                         ---ensures students with more than 1 student appear.
 
 ---advanced sql queries
 ---creating a view named student_course summary
@@ -216,7 +216,7 @@ JOIN course_management.courses c ON e.course_id = c.course_id;
 SELECT * FROM student_course_summary;
 
 ----adding an index on enrollments .student_id
-CREATE INDEX idx_enrollments_student                           ---Defines a new index 
+CREATE INDEX idx_enrollments_student                           ---  new index 
 ON course_management.enrollments(student_id);                  ---Creates index on the student_id column of the enrollments table.
 
 SELECT * FROM pg_indexes WHERE tablename = 'enrollments';       ---viewing indexes on a table.
